@@ -6,6 +6,7 @@ import passport from "passport";
 
 //configs
 import googleAuthConfig from "./config/google.config";
+import routeConfig from "./config/route.config";
 
 //Routes
 import Auth from "./API/Auth";
@@ -22,8 +23,9 @@ import ConnectDB from "./database/connection";
 
 const zomato = express();
 
-//passport configuration
+//configs
 googleAuthConfig(passport);
+routeConfig(passport);
 
 // application middlewares
 zomato.use(express.json());

@@ -4,19 +4,23 @@ import express from "express";
 // Database model
 import { ReviewModel } from "../../database/order";
 
+//validation
+import  { ValidateRestaurantId} from "../../validation/food";
+
 const Router = express.Router();
 
 /*
-Route       /review/:resid
+Route       /review/:resId
 Desc        Get all reviews related to a particular restaurant based on resid
 Params      resid
 Access      Public
 Method      GET
 */
-Router.get("/:resid", async(req,res) => {
+Router.get("/:resId", async(req,res) => {
     try{
-        const {resid} = req.params;
-        const reviews = await ReviewModel.find({restaurant: resid});
+        await ValidateRestaurantId(req.params);
+        const {resId} = req.params;
+        const reviews = await ReviewModel.find({restaurant: resId});
         return res.json({reviews});
     } catch(error){
         return res.status(500).json({error: error.message});

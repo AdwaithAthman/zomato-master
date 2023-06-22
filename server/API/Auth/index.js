@@ -5,6 +5,9 @@ import passport from "passport";
 //Models
 import { UserModel } from "../../database/user";
 
+//validation
+import { ValidateSignup, ValidateSignin } from "../../validation/auth";
+
 const Router = express.Router();
 
 /*
@@ -16,8 +19,8 @@ Method      POST
 */
 Router.post("/signup", async (req, res) => {
   try {
+    await ValidateSignup(req.body.credentials);
     const { email, password, fullName, phoneNumber } = req.body.credentials;
-
     await UserModel.findByEmailAndPhone(email, phoneNumber);
 
     //hashing and salting is done in the pre save method
@@ -45,6 +48,7 @@ Method      POST
 */
 Router.post("/signin", async (req, res) => {
   try {
+    await ValidateSignin(req.body.credentials);
     const { email, password, fullName, phoneNumber } = req.body.credentials;
     const user = await UserModel.findByEmailAndPassword(email, password);
     const token = user.generateJwtToken();
@@ -73,7 +77,7 @@ Router.get(
 
 /*
 Route       /auth/google/callback
-Desc        Google signin callback
+Desc        Google callback function
 Params      none
 Access      Public
 Method      GET

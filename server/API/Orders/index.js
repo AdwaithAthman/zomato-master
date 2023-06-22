@@ -1,5 +1,6 @@
 //Libraries
 import express from "express";
+import passport from "passport";
 
 // Database model
 import { OrderModel } from "../../database/order";
@@ -10,16 +11,16 @@ const Router = express.Router();
 Route       /order/:_id
 Desc        Get all orders based on _id
 Params      _id
-Access      Public
+Access      Private
 Method      GET
 */
-Router.get("/:_id", async (req,res) => {
+Router.get("/:_id", passport.authenticate('jwt', {session: false}), async (req,res) => {
     try{
         const {_id} = req.params;
         const getOrders = await OrderModel.findOne({ user: _id});
 
         if(!getOrders){
-            return res.status(404).json({erro: "User not found"});
+            return res.status(404).json({error: "User not found"});
         }
         return res.status(200).json({getOrders});
     } catch(error){
@@ -31,10 +32,10 @@ Router.get("/:_id", async (req,res) => {
 Route       /order/new/:_id
 Desc        Get all orders based on _id
 Params      _id
-Access      Public
+Access      Private
 Method      POST
 */
-Router.post("/new/:_id", async (req,res) => {
+Router.post("/new/:_id",  passport.authenticate('jwt', {session: false}), async (req,res) => {
     try{
         const {_id} = req.params;
         const {orderDetails} = req.body;
