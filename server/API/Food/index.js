@@ -30,7 +30,7 @@ Params      category
 Access      Public
 Method      GET
 */
-Router.get("/r/:category", async (req, res) => {
+Router.get("/c/:category", async (req, res) => {
   try {
     const { category } = req.params;
     const foods = await FoodModel.find({
